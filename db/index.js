@@ -2,7 +2,11 @@ const { readFile, writeFile } = require("fs/promises");
 const { v4 } = require("uuid");
 
 const path = require("path");
-const contactsPath = path.resolve("./contacts.json");
+const contactsPath = path.join(__dirname, "contacts.json");
+
+async function updateContacts(contacts) {
+  await writeFile(contactsPath, JSON.stringify(contacts));
+}
 
 async function listContacts() {
   try {
@@ -30,7 +34,7 @@ async function removeContact(contactId) {
     return null;
   }
   const newContactsArr = contactsArr.filter((_, index) => index !== idx);
-  await writeFile(contactsPath, JSON.stringify(newContactsArr));
+  updateContacts(newContactsArr);
   return contactsArr[idx];
 }
 
@@ -40,7 +44,26 @@ async function addContact(name, email, phone) {
 
   const newContactsArr = [...contactsArr, newContact];
 
-  await writeFile(contactsPath, JSON.stringify(newContactsArr));
+  updateContacts(newContactsArr);
   return newContact;
 }
-module.exports = { listContacts, getContactById, removeContact, addContact };
+
+async function updateContactById(contactId, body) {
+  const contactsArr = await listContacts();
+  const idx = contactsArr.findIndex((elem) => elem.id === contactId);
+  if (idx === -1) {
+    return null;
+  }
+
+  contactsArr[idx] = { ...contactsArr[idx], ...body };
+
+  updateContacts(contactsArr);
+  return contactsArr[idx];
+}
+module.exports = {
+  listContacts,
+  getContactById,
+  removeContact,
+  addContact,
+  updateContactById,
+};
