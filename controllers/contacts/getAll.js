@@ -1,18 +1,14 @@
 const contactsOperations = require("../../db");
-const getAll = async (_, res, next) => {
-  try {
-    const contacts = await contactsOperations.listContacts();
+const getAll = async (_, res) => {
+  const contacts = await contactsOperations.listContacts();
 
-    res.json({
-      status: 200,
-      message: "success",
-      data: {
-        result: contacts,
-      },
-    });
-  } catch (error) {
-    next(error);
-  }
+  res.json({
+    status: 200,
+    message: "success",
+    data: {
+      result: contacts,
+    },
+  });
 };
 
 module.exports = getAll;
