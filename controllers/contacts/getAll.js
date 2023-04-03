@@ -1,4 +1,5 @@
 const contactsOperations = require("../../db");
+
 const getAll = async (_, res) => {
   const contacts = await contactsOperations.listContacts();
 

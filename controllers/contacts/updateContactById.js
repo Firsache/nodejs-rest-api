@@ -1,5 +1,4 @@
 const createError = require("http-errors");
-
 const contactsOperations = require("../../db");
 
 const updateContactById = async (req, res) => {
