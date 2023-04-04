@@ -1,13 +1,12 @@
+const { Contact } = require("../../models");
 const createError = require("http-errors");
-
-const contactsOperations = require("../../db");
 
 const updateContactById = async (req, res) => {
   const { contactId } = req.params;
-  const response = await contactsOperations.updateContactById(
-    contactId,
-    req.body
-  );
+  const response = await Contact.findByIdAndUpdate(contactId, req.body, {
+    new: true,
+  });
+
   if (!response) {
     throw createError(404, "Not found");
   }
