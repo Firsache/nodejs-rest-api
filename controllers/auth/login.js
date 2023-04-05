@@ -1,19 +1,28 @@
 const { User } = require("../../models");
-const createError = require("http-errors");
+const { Unauthorized } = require("http-errors");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const { SECRET_KEY } = process.env;
 
 const login = async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
-  if (user) {
-    throw createError(409, "Email in use");
+  const passCompare = bcrypt.compareSync(password, user.password);
+
+  if (!user || !passCompare) {
+    throw new Unauthorized("Email or password is wrong");
   }
-  await User.create({ email, password });
+
+  const payload = {
+    id: user.id,
+  };
+  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1h" });
 
   res.json({
     status: 200,
     message: "Success",
     data: {
-      token: "exampletoken",
+      token,
       user: {
         email,
         subscription: "starter",

@@ -30,8 +30,6 @@ const joiRegisterSchema = Joi.object({
   email: Joi.string()
     .email({ minDomainSegments: 2, tlds: { allow: ["com", "net", "ua"] } })
     .required(),
-  subscription: Joi.string().required(),
-  token: Joi.string().required(),
 });
 
 const joiLoginSchema = Joi.object({
