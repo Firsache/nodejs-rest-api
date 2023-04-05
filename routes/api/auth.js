@@ -2,8 +2,12 @@ const express = require("express");
 const router = express.Router();
 
 const { auth: ctrl } = require("../../controllers");
-const { validation, ctrWrapper } = require("../../middlewares");
-const { joiRegisterSchema, joiLoginSchema } = require("../../models/user");
+const { validation, ctrWrapper, auth } = require("../../middlewares");
+const {
+  joiRegisterSchema,
+  joiLoginSchema,
+  subscriptionJoiSchema,
+} = require("../../models/user");
 
 router.post(
   "/register",
@@ -13,22 +17,15 @@ router.post(
 
 router.post("/login", validation(joiLoginSchema), ctrWrapper(ctrl.login));
 
-// router.get("/:contactId", ctrWrapper(ctrl.getContactById));
+router.get("/current", auth, ctrWrapper(ctrl.getCurrent));
 
-// router.post("/", validation(joiRegisterSchema), ctrWrapper(ctrl.addContact));
+router.post("/logout", auth, ctrWrapper(ctrl.logout));
 
-// router.delete("/:contactId", ctrWrapper(ctrl.removeContact));
-
-// router.put(
-//   "/:contactId",
-//   validation(joiLoginSchema),
-//   ctrWrapper(ctrl.updateContactById)
-// );
-
-// router.patch(
-//   "/:contactId/favorite",
-//   validation(favoriteJoiSchema),
-//   ctrWrapper(ctrl.updateStatusContact)
-// );
+router.patch(
+  "/",
+  auth,
+  validation(subscriptionJoiSchema),
+  ctrWrapper(ctrl.updateSubscriptionUser)
+);
 
 module.exports = router;
