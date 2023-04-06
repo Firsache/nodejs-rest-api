@@ -19,6 +19,10 @@ const contactSchema = Schema(
       type: Boolean,
       default: false,
     },
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: "user",
+    },
   },
   { versionKey: false, timestamps: true }
 );
@@ -26,7 +30,7 @@ const contactSchema = Schema(
 const Contact = model("contact", contactSchema);
 
 const joiSchema = Joi.object({
-  name: Joi.string().alphanum().min(3).max(30).required(),
+  name: Joi.string().min(3).max(30).required(),
   email: Joi.string()
     .email({ minDomainSegments: 2, tlds: { allow: ["com", "net", "ua"] } })
     .required(),
