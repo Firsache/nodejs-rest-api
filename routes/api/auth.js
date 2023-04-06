@@ -32,7 +32,7 @@ router.patch(
   "/avatars",
   auth,
   upload.single("avatar"),
-  ctrWrapper(ctrl.getAvatar)
+  ctrWrapper(ctrl.updateAvatar)
 );
 
 module.exports = router;
