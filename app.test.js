@@ -7,6 +7,36 @@ const { User } = require("./models");
 
 const { DB_HOST, PORT = 3000 } = process.env;
 
+describe("POST /api/users/register", () => {
+  let server;
+  beforeAll(() => (server = app.listen(PORT)));
+  afterAll(() => server.close());
+
+  beforeEach((done) => {
+    mongoose.connect(DB_HOST).then(() => done());
+  });
+
+  afterEach((done) => {
+    mongoose.connection.db.dropCollection(() => {
+      mongoose.connection.close(() => done());
+    });
+  });
+
+  describe("given an email and a password", () => {
+    test("should respond with status code 201", async () => {
+      const newUser = await User.create({
+        email: "test1@mail.com",
+        password: "testtest1",
+      });
+      const response = await request(app)
+        .post("/api/users/register")
+        .send(newUser);
+      console.log(response);
+      expect(response.status).toBe(201);
+    });
+  });
+});
+
 describe("POST /api/users/login", () => {
   let server;
   beforeAll(() => (server = app.listen(PORT)));
@@ -67,36 +97,6 @@ describe("POST /api/users/login", () => {
         const response = await request(app).post("/login").send({});
         expect(response.status).toBe(404);
       });
-    });
-  });
-});
-
-describe("POST /api/users/register", () => {
-  let server;
-  beforeAll(() => (server = app.listen(PORT)));
-  afterAll(() => server.close());
-
-  beforeEach((done) => {
-    mongoose.connect(DB_HOST).then(() => done());
-  });
-
-  afterEach((done) => {
-    mongoose.connection.db.dropCollection(() => {
-      mongoose.connection.close(() => done());
-    });
-  });
-
-  describe("given an email and a password", () => {
-    test("should respond with status code 201", async () => {
-      const newUser = await User.create({
-        email: "test1@mail.com",
-        password: "testtest1",
-      });
-      const response = await request(app)
-        .post("/api/users/register")
-        .send(newUser);
-      console.log(response);
-      expect(response.status).toBe(201);
     });
   });
 });
