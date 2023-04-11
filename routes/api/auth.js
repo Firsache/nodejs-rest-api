@@ -17,9 +17,13 @@ router.post(
 
 router.post("/login", validation(joiLoginSchema), ctrWrapper(ctrl.login));
 
+router.get("/verify/:verificationToken", ctrWrapper(ctrl.verifyEmail));
+
 router.get("/current", auth, ctrWrapper(ctrl.getCurrent));
 
 router.post("/logout", auth, ctrWrapper(ctrl.logout));
+
+// router.post("/verify", auth, ctrWrapper(ctrl.updateVerify));
 
 router.patch(
   "/",
