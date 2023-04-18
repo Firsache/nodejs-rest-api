@@ -7,6 +7,7 @@ const {
   joiRegisterSchema,
   joiLoginSchema,
   subscriptionJoiSchema,
+  verificationJoiSchema,
 } = require("../../models/user");
 
 router.post(
@@ -16,6 +17,13 @@ router.post(
 );
 
 router.post("/login", validation(joiLoginSchema), ctrWrapper(ctrl.login));
+
+router.get("/verify/:verificationToken", ctrWrapper(ctrl.verifyEmail));
+router.post(
+  "/verify",
+  validation(verificationJoiSchema),
+  ctrWrapper(ctrl.updateVerification)
+);
 
 router.get("/current", auth, ctrWrapper(ctrl.getCurrent));
 
