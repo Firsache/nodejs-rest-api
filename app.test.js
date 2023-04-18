@@ -31,7 +31,6 @@ describe("POST /api/users/register", () => {
       const response = await request(app)
         .post("/api/users/register")
         .send(newUser);
-      console.log(response);
       expect(response.status).toBe(201);
     });
   });
@@ -53,39 +52,39 @@ describe("POST /api/users/login", () => {
   });
   describe("given an email and a password", () => {
     test("should respond with status code 200", async () => {
-      const response = await request(app).post("/login").send({
-        email: "lou71@mail.com",
-        password: "bouboubou",
+      const response = await request(app).post("/api/users/login").send({
+        email: "test1@mail.com",
+        password: "testtest1",
       });
       expect(response.status).toBe(200);
     });
     test("should respond with json", async () => {
-      const response = await request(app).post("/login").send({
-        email: "lou71@mail.com",
-        password: "bouboubou",
+      const response = await request(app).post("/api/users/login").send({
+        email: "test1@mail.com",
+        password: "testtest1",
       });
       expect(response.headers["content-type"]).toEqual(
         expect.stringContaining("json")
       );
     });
     test("should respond with token", async () => {
-      const response = await request(app).post("/login").send({
-        email: "lou71@mail.com",
-        password: "bouboubou",
+      const response = await request(app).post("/api/users/login").send({
+        email: "test1@mail.com",
+        password: "testtest1",
       });
       expect(response.data.token).toBeDefined();
     });
     test("should respond with an object user containing email and subscription", async () => {
-      const response = await request(app).post("/login").send({
-        email: "lou71@mail.com",
-        password: "bouboubou",
+      const response = await request(app).post("/api/users/login").send({
+        email: "test1@mail.com",
+        password: "testtest1",
       });
       expect(response.data.user.email).toBeDefined();
       expect(response.data.user.subscription).toBeDefined();
     });
     describe("when an email and a password is wrong", () => {
       test("should respond with status code 404", async () => {
-        const response = await request(app).post("/login").send({
+        const response = await request(app).post("/api/users/login").send({
           email: "useremail@mail.com",
           password: "passpasspass",
         });
@@ -94,7 +93,7 @@ describe("POST /api/users/login", () => {
     });
     describe("when an email and a password is missing", () => {
       test("should respond with status code 404", async () => {
-        const response = await request(app).post("/login").send({});
+        const response = await request(app).post("/api/users/login").send({});
         expect(response.status).toBe(404);
       });
     });
